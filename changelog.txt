@@ -1,9 +1,16 @@
+(#6)[1/6/2018-23:30 0.1.0 Sergix]
+	Created "dev" branch.
+	Merged #1.
+		- Created "CODE_OF_CONDUCT.md".
+		- "add-code-of-conduct" branch merged into "dev".
+	Pushed updates to Git.
+
 (#5)[1/6/2018-23:30 0.1.0 Sergix]
 	Created repository on GitHub.
 	This project is now officially named "Releaseflow".
 	Created README and LICENSE.
 	Changed config file name from "vbconfig.json" to "rfconfig.json".
-	Pushed updates to git.
+	Pushed updates to Git.
 
 (#4)[1/6/2018-16:44 0.1.0 Sergix]
 	Created exec.ts, docs.ts, and source.ts, with release() function in each.
