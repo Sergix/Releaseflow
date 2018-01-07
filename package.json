@@ -1,0 +1,30 @@
+{
+	"name": "releaseflow",
+	"version": "0.1.0",
+	"description": "Quickly build all your dependencies for release.",
+	"author": "Peyton McGinnis <sergix@outlook.com>",
+	"main": "dist/app.js",
+	"license": "GPL-2.0+",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sergix/"
+	},
+	"scripts": {
+		"start": "node dist/app.js",
+		"build": "tsc && npm run tslint",
+		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"test": "node dist/app.js -lde"
+	},
+	"dependencies": {
+		"@types/node": "^8.5.2",
+		"archiver": "^2.1.0",
+		"commander": "^2.12.2",
+		"jsonfile": "^4.0.0",
+		"tslint": "^5.8.0"
+	},
+	"devDependencies": {
+		"@types/archiver": "^2.0.1",
+		"@types/jsonfile": "^4.0.1",
+		"typescript": "^2.6.2"
+	}
+}

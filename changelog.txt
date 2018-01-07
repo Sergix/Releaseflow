@@ -1,0 +1,32 @@
+(#5)[1/6/2018-23:30 0.1.0 Sergix]
+	Created repository on GitHub.
+	This project is now officially named "Releaseflow".
+	Created README and LICENSE.
+	Changed config file name from "vbconfig.json" to "rfconfig.json".
+	Pushed updates to git.
+
+(#4)[1/6/2018-16:44 0.1.0 Sergix]
+	Created exec.ts, docs.ts, and source.ts, with release() function in each.
+	Added 'archiver' dependency for source building.
+	Safe to say this project is in v0.1.0.
+
+(#3)[1/5/2018-15:57 pre-alpha Sergix]
+	Created regexp.ts file, with replacer() function.
+	Created changelog get() and match() functions.
+	Added %n, %s, %%(option)% options to format strings.
+	Added tslint script to project package.
+
+(#2)[1/4/2018-13:18 pre-alpha Sergix]
+	Created changelog.ts, config.ts, exec.ts, program.ts files.
+	Added basic template config file creation, which makes a 'vbconfig.json' file.
+	Installed jsonfile module and type definitions.
+
+(#1)[1/1/2018-13:24 pre-alpha Sergix]
+	Created changelog.txt for tracking code changes and reference.
+	Prepared repository with base files.
+		- src/
+			- app.ts
+		- tsconfig
+		- node modules
+			- commander
+			- typescript
