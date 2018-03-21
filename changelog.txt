@@ -1,3 +1,7 @@
+(#12)[3/21/2018-14:45 1.1.2 Sergix]
+	Fixed issue with template.json not being able to be read.
+	Pushed updates to Git.
+
 (#11)[3/21/2018-11:38 1.1.1 Sergix]
 	Forgot the shebang line...
 	Pushed updates to Git.

@@ -4,7 +4,33 @@ import * as fs from 'fs'
 import * as colors from 'colors'
 import * as xmlj from 'xml2js'
 
-const template = json.readFileSync('./src/template.json')
+const template = {
+  'package': './package.json',
+  'markdown': true,
+  'docs': {
+    'title': 'Project Template %%version% Documentation',
+    'dist': './docs/',
+    'template': {
+      'Overview': 'This is the documentation for %%name%.',
+      'Table of Contents': '%%toc%',
+      'Changelog': '%%changelog%',
+      'Licensing': '%%name% version %%version% licensed under %%license%'
+    }
+  },
+  'changelog': {
+    'path': 'changelog.txt',
+    'header_format': '(%n)[%n/%n/%n-%n:%n %%version% %s]',
+    'replace_links': true,
+    'dist': './changelog/',
+    'ignore': ['Signed off by user.']
+  },
+  'source': {
+    'dir': ['src/exampleFile.txt', 'src/exampleDirectory/exampleSubDirectory/', 'src/example5/*'],
+    'dist': './source/',
+    'compression': ['zip', 'tar']
+  },
+  'exec': 'npm run build'
+}
 
 export let path: string = 'rfconfig.json'
 export let data: { [index: string]: any } = template

@@ -1,0 +1,1 @@
+- Fixed issue with template.json not being able to be read.

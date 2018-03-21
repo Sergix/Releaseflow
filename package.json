@@ -1,6 +1,6 @@
 {
 	"name": "releaseflow-cli",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "Quickly build all your dependencies for release.",
 	"author": "Peyton McGinnis <sergix@outlook.com>",
 	"main": "lib/app.js",
