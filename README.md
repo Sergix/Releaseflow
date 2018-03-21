@@ -8,7 +8,8 @@ After a release build is ready for deployment, there are a _lot_ of tasks to be 
 	- Generates documentation, including information from the project's changelog
 	- Builds the executable
 	- Packs source code into a ZIP or other specified compression format
-- Compatible with Node.js, Maven (coming soon), and many other project formats
+- Compatible with Node.js and Maven, and many other project formats coming soon
+	- Or, you can define your own XML or JSON file that can be used!
 - Installable via [npm](https://www.npmjs.com/) (coming soon)
 
 ## Where do I get it?

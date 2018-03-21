@@ -1,0 +1,6 @@
+docs/
+.gitignore
+changelog.txt
+tsconfig.json
+tslint.json
+src/
