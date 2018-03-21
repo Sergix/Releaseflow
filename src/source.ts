@@ -7,6 +7,7 @@ export default function release(): void {
   // TODO
   // add verifier for config paths, ensuring they have a '/' character at the end, or '\' if Windows, etc.
   // add custom export filename in config
+  // change to array for compression property, allowing multiple formats to be exported
 
   let filename: string
   let archive: any

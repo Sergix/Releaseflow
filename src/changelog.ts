@@ -6,6 +6,10 @@ import * as fs from 'fs'
 export let current: Array<string> = []
 
 export function get(): Array<string> {
+  // TODO
+  // Add "ignore" option for lines in
+  // rfconfig
+
   const data = []
   const fileContents: string = fs.readFileSync(config.data.changelog.path).toString()
   let line: string = ''

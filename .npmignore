@@ -4,3 +4,4 @@ changelog.txt
 tsconfig.json
 tslint.json
 src/
+release/
