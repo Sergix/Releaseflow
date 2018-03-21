@@ -1,0 +1,3 @@
+- Added "ignore" property for "changelog" in rfconfig.
+- Changed "compression" property to array.
+- Fixed template.json issue.

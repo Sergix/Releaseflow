@@ -21,7 +21,7 @@
   "source": {
     "dir": ["src/*.ts", "src/template.json"],
     "dist": "./release/src/",
-    "compression": "zip"
+    "compression": ["zip", "tar"]
   },
   "exec": "npm run build"
 }

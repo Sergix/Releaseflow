@@ -1,3 +1,7 @@
+(#11)[3/21/2018-11:38 1.1.1 Sergix]
+	Forgot the shebang line...
+	Pushed updates to Git.
+
 (#10)[3/21/2018-11:21 1.1.0 Sergix]
 	Added "ignore" property for "changelog" in rfconfig.
 	Changed "compression" property to array.
