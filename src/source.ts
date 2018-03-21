@@ -1,19 +1,34 @@
 import * as fs from 'fs'
 import * as archiver from 'archiver'
 import * as config from './config'
+import * as colors from 'colors'
 
-export function release(): void {
+export default function release(): void {
   // TODO
-  //
   // add verifier for config paths, ensuring they have a '/' character at the end, or '\' if Windows, etc.
-  //
-  const output = fs.createWriteStream(config.data.source.dist + 'test.zip')
-  const archive = archiver('zip', {
-    zlib: { level: 9 }
-  })
+  // add custom export filename in config
+  // change to array for compression property, allowing multiple formats to be exported
+
+  let filename: string
+  let archive: any
+
+  if (config.data.source.compression === 'zip') {
+    filename = config.data.source.dist + 'src-' + config.projectPackage.version + '.zip'
+    archive = archiver('zip', {
+      zlib: { level: 9 }
+    })
+  } else if (config.data.source.compression === 'tar') {
+    filename = config.data.source.dist + 'src-' + config.projectPackage.version + '.tar.gz'
+    archive = archiver('tar', {
+      gzip: true,
+      gzipOptions: { level: 9 }
+    })
+  }
+
+  const output = fs.createWriteStream(filename)
 
   output.on('close', function() {
-    console.info('Finished packaging source.')
+    console.info(colors.green('Finished packaging source to '), colors.bgGreen.white(`${filename}`))
   })
 
   output.on('end', function() {
@@ -28,15 +43,13 @@ export function release(): void {
     }
   })
 
-  archive.on('error', function(err) {
+  archive.on('error', function(err: any) {
     throw err
   })
 
   archive.pipe(output)
 
-  const sources: Array<string> = config.data.source.dir.split(';')
-
-  sources.forEach(dir => {
+  config.data.source.dir.forEach((dir: string) => {
     dir.trim()
     archive.glob(dir)
   })
