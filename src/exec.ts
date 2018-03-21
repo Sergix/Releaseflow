@@ -3,10 +3,6 @@ import * as shell from 'child_process'
 import * as colors from 'colors'
 
 export default function release(): void {
-  // TODO
-  // add config option for exec path
-  // and build command
-
   shell.exec(config.data.exec, (error, stdout, stderr) => {
       if (error) {
         console.error(colors.red(`ERROR: could not build application executable: ${error}`))

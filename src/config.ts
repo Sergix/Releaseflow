@@ -31,10 +31,6 @@ export function load(): void {
 
   data = json.readFileSync(path)
 
-  // TODO
-  // assuming the package data is in json... at the moment
-  // add statement to check file extension and parse xml as well
-
   if (data.package) {
     if (data.package.endsWith('package.json')) { // Node.js
       type = 'node'

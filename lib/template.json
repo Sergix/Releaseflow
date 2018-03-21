@@ -15,13 +15,13 @@
     "path": "changelog.txt",
     "header_format": "(%n)[%n/%n/%n-%n:%n %%version% %s]",
     "replace_links": true,
-    "dist": "./changelog/",
-    "ignore": ["Signed off by user."]
+    "dist": "./changelog/"
   },
   "source": {
     "dir": ["src/exampleFile.txt", "src/exampleDirectory/exampleSubDirectory/", "src/example5/*"],
     "dist": "./source/",
-    "compression": ["zip", "tar"]
+    "compression": "zip",
+    "ignore": ["Signed off by user."]
   },
   "exec": "npm run build"
 }

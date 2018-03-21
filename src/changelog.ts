@@ -6,17 +6,16 @@ import * as fs from 'fs'
 export let current: Array<string> = []
 
 export function get(): Array<string> {
-  // TODO
-  // Add "ignore" option for lines in
-  // rfconfig
-
-  const data = []
+  const data: Array<string> = []
   const fileContents: string = fs.readFileSync(config.data.changelog.path).toString()
   let line: string = ''
 
   for (let i = 0; i < fileContents.length; i++) {
     if (fileContents[i] === '\n') {
-      data[data.length] = line.trim()
+      config.data.changelog.ignore.forEach((x: string) => {
+        if (x !== line.trim()) // if we need to ignore the line
+          data[data.length] = line.trim()
+      })
       line = ''
       continue
     }
