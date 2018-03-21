@@ -7,13 +7,14 @@ After a release build is ready for deployment, there are a _lot_ of tasks to be 
 - Automatically:
 	- Generates documentation, including information from the project's changelog
 	- Builds the executable
-	- Packs source code into a ZIP or other specified compression format
+	- Packs source code into a ZIP or TAR
 - Compatible with Node.js and Maven, and many other project formats coming soon
 	- Or, you can define your own XML or JSON file that can be used!
-- Installable via [npm](https://www.npmjs.com/) (coming soon)
+- Installable via [npm](https://www.npmjs.com/package/releaseflow-cli)
 
 ## Where do I get it?
-As of now, this project is only available by compiling the source. Soon, the application will be installable via [npm](https://www.npmjs.com/).
+The application is installable via [npm](https://www.npmjs.com/package/releaseflow-cli):  
+`npm install -g releaseflow-cli`
 
 ## Usage
 
