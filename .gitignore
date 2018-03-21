@@ -2,6 +2,6 @@ vbconfig.json
 .vscode/
 node_modules/
 app.txt
-rfconfig.json
+rfconfig-test.json
 test/
 pom.xml

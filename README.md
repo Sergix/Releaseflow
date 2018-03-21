@@ -7,13 +7,14 @@ After a release build is ready for deployment, there are a _lot_ of tasks to be 
 - Automatically:
 	- Generates documentation, including information from the project's changelog
 	- Builds the executable
-	- Packs source code into a ZIP or other specified compression format
+	- Packs source code into a ZIP or TAR
 - Compatible with Node.js and Maven, and many other project formats coming soon
 	- Or, you can define your own XML or JSON file that can be used!
-- Installable via [npm](https://www.npmjs.com/) (coming soon)
+- Installable via [npm](https://www.npmjs.com/package/releaseflow-cli)
 
 ## Where do I get it?
-As of now, this project is only available by compiling the source. Soon, the application will be installable via [npm](https://www.npmjs.com/).
+The application is installable via [npm](https://www.npmjs.com/package/releaseflow-cli):  
+`npm install -g releaseflow-cli`
 
 ## Usage
 
@@ -42,10 +43,11 @@ All the configuration for your project is stored here, formatted as a JSON objec
 &nbsp;&nbsp;&nbsp;&nbsp;`header_format`: the format of each entry's header  
 &nbsp;&nbsp;&nbsp;&nbsp;`replace_links`: replace issue/pull request identifiers with actual links (i.e. `#1` is replaced by `[#1](https://www.github.com/user/repo/issues/1)`)  
 &nbsp;&nbsp;&nbsp;&nbsp;`dist`: output folder path  
+&nbsp;&nbsp;&nbsp;&nbsp;`ignore`: array of lines to ignore, such as a sign-off  
 `source`: information used when compressing the source code  
 &nbsp;&nbsp;&nbsp;&nbsp;`dir`: array of glob strings (i.e. `*.txt`, `src/*.*`) of paths to files and folders that should be included  
 &nbsp;&nbsp;&nbsp;&nbsp;`dist`: output folder path  
-&nbsp;&nbsp;&nbsp;&nbsp;`compression`: compression format, either `zip` or `tar` (Note: tar's are also gzipped)  
+&nbsp;&nbsp;&nbsp;&nbsp;`compression`: array containing compression formats, either `zip` or `tar` (Note: tar's are also gzipped); there will be a file exported for each format specified  
 `exec`: command used to build the project  
 
 For the `title` and `template` sections in `docs`, project information may be interpolated into the contents by using the following identifiers:  
