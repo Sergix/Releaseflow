@@ -1,0 +1,3 @@
+- Moved docs.replacer() to util.interpolate().
+- "dist" property paths can now include interpolaters, as well as a new interpolater %e for file extension.
+- "dist" property can now be a path to a file; if it is a directory it has a fallback default filename.
