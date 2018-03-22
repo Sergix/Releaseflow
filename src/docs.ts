@@ -5,65 +5,14 @@ import * as fs from 'fs'
 import * as colors from 'colors'
 import * as util from './util'
 
-let toc: string = ''
-
-function replacer(line: string): string {
-  /*
-  flag_s: single '%'
-  flag_m: double '%'
-  */
-  let flag_s: boolean = false, flag_m: boolean = false
-  let option: string = ''
-  let output: string = ''
-
-  for (let i = 0; i < line.length; i++) {
-    if (flag_s || flag_m) {
-      if (line[i] !== '%') {
-        option += line[i]
-        continue
-      } else if (line[i] === '%' && !flag_m) {
-        flag_s = false
-        flag_m = true
-        continue
-      }
-
-      if (option !== '') {
-        if (option === 'changelog') {
-          if (changelog.current.length === 0) {
-            changelog.release(false)
-          }
-          for (let j = 0; j < changelog.current.length; j++) {
-            output += `${changelog.current[j]}\r\n`
-          }
-        } else if (option === 'toc') {
-          output += `${toc}\r\n`
-        } else {
-          if (config.projectPackage !== undefined)
-            output += config.projectPackage[option]
-        }
-
-        option = '' // clear option string
-      }
-
-      flag_s = false
-      flag_m = false
-      continue
-    }
-
-    if (line[i] === '%') {
-      flag_s = true
-      continue
-    }
-
-    output += line[i]
-  }
-
-  return output
-}
+export let toc: string = ''
 
 function generateToc(): void {
   let i = 1
+  // loop through each tempalate section
   for (const x in config.data.docs.template) {
+    // (i)      (x)
+    //  1. Section Title
     toc += `${i}. ${x}\r\n`
     i++
   }
@@ -72,15 +21,26 @@ function generateToc(): void {
 export function build(): Array<string> {
   const data: Array<string> = []
 
+  // go ahead and generate the table of contents in case we need it later
   generateToc()
 
-  data.push((config.data.markdown ? '# ' : '') + replacer(config.data.docs.title) + '\r\n\r\n')
+  // add the document title
+  data.push((config.data.markdown ? '# ' : '') + util.replacer(config.data.docs.title, {interpolate: true}) + '\r\n\r\n')
 
+  // TODO
+  // add subsections by checking if the section is an object rather than a string
+  // recursiveness will really come in handy
+
+  // loop through each section
   for (const x in config.data.docs.template) {
-    data.push((config.data.markdown ? '## ' : '') + `${x}\r\n`) // title
+    // add the section title
+    data.push((config.data.markdown ? '## ' : '') + `${x}\r\n`)
+    // if we're not writing in markdown, add a little section underline
     if (!config.data.markdown) data.push('----------------------')
-    data.push(replacer(config.data.docs.template[x])) // format the line's specified options
-    data.push('\r\n') // extra newline between sections
+    /// interpolate user specified package properties
+    data.push(util.replacer(config.data.docs.template[x], {interpolate: true}))
+    // add an extra newline between sections
+    data.push('\r\n')
   }
 
   return data
@@ -88,12 +48,31 @@ export function build(): Array<string> {
 
 export default function release(): void {
   const contents = build()
-  // TODO
-  // Add option in config
-  // for custom filename
 
-  const filename = config.data.docs.dist + 'docs-' + config.projectPackage.version + '.md'
+  // Do some replacign incase they put %%version% in the file path string
+  let filename = util.replacer(config.data.docs.dist, {interpolate: true})
 
+  // Get the file extension
+  const ext = config.data.markdown ? 'md' : 'txt'
+
+  // Replace the interpolater indentifier '%e' with the file extension
+  filename.replace(/%e/, ext)
+
+  // If the path is a directory, check if it ends with a '/' and append a default string along with
+  // the version number if available; otherwise, slap a timestamp on the filename as the fallback to make sure
+  // we don't overwrite any existing files, as well as provide a warning.
+  if (fs.statSync(filename).isDirectory()) {
+    if (!filename.endsWith('/') && !filename.endsWith('\\')) {
+      filename += '/'
+    }
+    filename += 'docs-' + 
+      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ? 
+        config.projectPackage.version :
+        (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the documentation filename.')), Date.now().toString())
+      )
+  }
+
+  // Write the doc contents to the file!
   fs.writeFile(filename, util.stringify(contents), (err) => {
     if (!err) {
       console.info(colors.green('Finished writing documentation. Wrote to'), colors.bgGreen.white(`${filename}`))

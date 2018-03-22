@@ -1,6 +1,7 @@
 import * as config from './config'
 import * as regexp from './regexp'
 import * as util from './util'
+import * as colors from 'colors'
 import * as fs from 'fs'
 
 export let current: Array<string> = []
@@ -60,9 +61,31 @@ export function match(x: Array<string>): Array<string> {
 export function release(file: boolean = true): void {
   current = match(get())
 
+  let filename = util.replacer(config.data.changelog.dist, {interpolate: true})
+
+  // Get the file extension
+  const ext = config.data.markdown ? 'md' : 'txt'
+
+  // Replace the interpolater indentifier '%e' with the file extension
+  filename.replace(/%e/, ext)
+
+  // If the path is a directory, check if it ends with a '/' and append a default string along with
+  // the version number if available; otherwise, slap a timestamp on the filename as the fallback to make sure
+  // we don't overwrite any existing files, as well as provide a warning.
+  if (fs.statSync(filename).isDirectory()) {
+    if (!filename.endsWith('/') && !filename.endsWith('\\')) {
+      filename += '/'
+    }
+    filename += 'changelog-' + 
+      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ? 
+        config.projectPackage.version :
+        (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the changelog filename.')), Date.now().toString())
+      )
+  }
+
   if (file) {
     fs.writeFileSync(
-      config.data.changelog.dist + 'changelog-' + config.projectPackage.version + '.' + (config.data.markdown ? 'md' : 'txt'),
+      filename,
       util.stringify(current)
     )
   }
