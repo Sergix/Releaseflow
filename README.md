@@ -50,8 +50,8 @@ All the configuration for your project is stored here, formatted as a JSON objec
 &nbsp;&nbsp;&nbsp;&nbsp;`compression`: array containing compression formats, either `zip` or `tar` (Note: tar's are also gzipped); there will be a file exported for each format specified  
 `exec`: command used to build the project  
 
-For the `title` and `template` sections in `docs`, project information may be interpolated into the contents by using the following identifiers:  
-`%%changelog%`: the project's generated, formatted changelog    
+For the `title` and `template` sections in `docs`, as well as the 'dist' property, project information may be interpolated into the contents by using the following identifiers:  
+`%%changelog%`: the project's generated, formatted changelog  
 `%%toc%`: table of contents  
 
 Any property present in the project's properties file (i.e. `package.json`, `pom.xml`) may be interpolated as well. Examples:  
@@ -60,6 +60,9 @@ Any property present in the project's properties file (i.e. `package.json`, `pom
 For the `header_format` property _only_, you can supply the following identifiers:  
 `%n`: integer  
 `%s`: string  
+
+For the 'dist' properties _only_, you can supply the following identifiers:  
+`%e`: default file extension (i.e. 'changelog-1.0.0.%e' would be 'changelog-1.0.0.md' if markdown is enabled)
 
 An example `header_format` would look something like this:  
 `(#%n)[%n/%n/%n-%n:%n %%version% %s]` would be the formatted string for `(#23)[4/2/2018-11:12 1.2.0 beta]`
@@ -70,7 +73,7 @@ View the [Contributing Guidelines](https://github.com/Sergix/JTerm/blob/master/C
 ## Slack
 Request to join the [Sergix](https://sergix.slack.com/) team to recieve notifications on updates, Travis CI build status, and more!
 
-> Releaseflow v1.0.1  
-> `1.0.1`  
+> Releaseflow v1.2.1  
+> `1.2.1`  
 > This project and its source are held under the GNU General Public License, located in the LICENSE file in the project's directory.  
 > (c) 2018

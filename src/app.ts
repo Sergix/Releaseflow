@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+
 import * as program from './program'
 import * as config from './config'
 import exec from './exec'

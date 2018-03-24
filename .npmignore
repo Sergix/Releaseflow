@@ -6,3 +6,10 @@ tslint.json
 src/
 release/
 rfconfig.json
+test/
+node_modules/
+app.txt
+pom.xml
+rfconfog-test.json
+CODE_OF_CONDUCT.md
+.vscode/

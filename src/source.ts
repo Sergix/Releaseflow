@@ -1,26 +1,28 @@
 import * as fs from 'fs'
 import * as archiver from 'archiver'
 import * as config from './config'
+import * as util from './util'
 import * as colors from 'colors'
 
 export default function release(): void {
   // TODO
   // add verifier for config paths, ensuring they have a '/' character at the end, or '\' if Windows, etc.
-  // add custom export filename in config
-  // change to array for compression property, allowing multiple formats to be exported
-
-  let filename: string
   let archive: any
+  let filename: string
 
   config.data.source.compression.forEach((type: string) => {
 
     if (type === 'zip') {
-      filename = config.data.source.dist + 'src-' + config.projectPackage.version + '.zip'
+      filename = util.replacer(config.data.source.dist, {interpolate: true, ext: 'zip'})
+      if (!filename.endsWith('zip'))
+        filename += 'zip'
       archive = archiver('zip', {
         zlib: { level: 9 }
       })
     } else if (type === 'tar') {
-      filename = config.data.source.dist + 'src-' + config.projectPackage.version + '.tar.gz'
+      filename = util.replacer(config.data.source.dist, {interpolate: true, ext: 'tar.gz'})
+      if (!filename.endsWith('tar.gz'))
+        filename += 'tar.gz'
       archive = archiver('tar', {
         gzip: true,
         gzipOptions: { level: 9 }

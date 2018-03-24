@@ -1,6 +1,7 @@
 import * as config from './config'
 import * as regexp from './regexp'
 import * as util from './util'
+import * as colors from 'colors'
 import * as fs from 'fs'
 
 export let current: Array<string> = []
@@ -58,12 +59,43 @@ export function match(x: Array<string>): Array<string> {
 }
 
 export function release(file: boolean = true): void {
+  const ext: string = config.data.markdown ? 'md' : 'txt'
+  let isDir: boolean = false
+  let filename: string = util.replacer(config.data.changelog.dist, {interpolate: true})
   current = match(get())
 
-  if (file) {
-    fs.writeFileSync(
-      config.data.changelog.dist + 'changelog-' + config.projectPackage.version + '.' + (config.data.markdown ? 'md' : 'txt'),
-      util.stringify(current)
-    )
+  // check if the file exists
+  try {
+    fs.accessSync(filename, fs.constants.F_OK)
+    isDir = false
+  } catch (err) {
+    // check if its a directory
+    try {
+      fs.statSync(filename).isDirectory()
+      isDir = true
+    } catch (err) {
+      isDir = false
+    }
   }
+
+  // if it's a directory, use the default changelog filename
+  if (isDir) {
+    if (!filename.endsWith('/') && !filename.endsWith('\\')) {
+      filename += '/'
+    }
+    filename += 'changelog-' +
+      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ?
+        config.projectPackage.version :
+        (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the changelog filename.')), Date.now().toString())
+      ) + '.' + ext
+  }
+
+  // Write the contents to the file!
+  fs.writeFile(filename, util.stringify(current), (err) => {
+    if (!err) {
+      console.info(colors.green('Finished writing changelog. Wrote to'), colors.bgGreen.white(`${filename}`))
+    } else {
+      console.error(colors.red('ERROR: Failed to create changelog at'), colors.red.underline(`${filename}`), colors.red('. Perhaps the directory doesn\'t exist?'))
+    }
+  })
 }
