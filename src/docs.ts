@@ -47,29 +47,35 @@ export function build(): Array<string> {
 }
 
 export default function release(): void {
+  const ext: string = config.data.markdown ? 'md' : 'txt'
   const contents = build()
-
-  // Do some replacign incase they put %%version% in the file path string
   let filename = util.replacer(config.data.docs.dist, {interpolate: true})
+  let isDir: boolean = false
 
-  // Get the file extension
-  const ext = config.data.markdown ? 'md' : 'txt'
+  // check if the file exists
+  try {
+    fs.accessSync(filename, fs.constants.F_OK)
+    isDir = false
+  } catch (err) {
+    // check if its a directory
+    try {
+      fs.statSync(filename).isDirectory()
+      isDir = true
+    } catch (err) {
+      isDir = false
+    }
+  }
 
-  // Replace the interpolater indentifier '%e' with the file extension
-  filename.replace(/%e/, ext)
-
-  // If the path is a directory, check if it ends with a '/' and append a default string along with
-  // the version number if available; otherwise, slap a timestamp on the filename as the fallback to make sure
-  // we don't overwrite any existing files, as well as provide a warning.
-  if (fs.statSync(filename).isDirectory()) {
+  // if it's a directory, use the default changelog filename
+  if (isDir) {
     if (!filename.endsWith('/') && !filename.endsWith('\\')) {
       filename += '/'
     }
-    filename += 'docs-' + 
-      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ? 
+    filename += 'docs-' +
+      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ?
         config.projectPackage.version :
         (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the documentation filename.')), Date.now().toString())
-      )
+      ) + '.' + ext
   }
 
   // Write the doc contents to the file!

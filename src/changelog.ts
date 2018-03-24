@@ -59,34 +59,43 @@ export function match(x: Array<string>): Array<string> {
 }
 
 export function release(file: boolean = true): void {
+  const ext: string = config.data.markdown ? 'md' : 'txt'
+  let isDir: boolean = false
+  let filename: string = util.replacer(config.data.changelog.dist, {interpolate: true})
   current = match(get())
 
-  let filename = util.replacer(config.data.changelog.dist, {interpolate: true})
+  // check if the file exists
+  try {
+    fs.accessSync(filename, fs.constants.F_OK)
+    isDir = false
+  } catch (err) {
+    // check if its a directory
+    try {
+      fs.statSync(filename).isDirectory()
+      isDir = true
+    } catch (err) {
+      isDir = false
+    }
+  }
 
-  // Get the file extension
-  const ext = config.data.markdown ? 'md' : 'txt'
-
-  // Replace the interpolater indentifier '%e' with the file extension
-  filename.replace(/%e/, ext)
-
-  // If the path is a directory, check if it ends with a '/' and append a default string along with
-  // the version number if available; otherwise, slap a timestamp on the filename as the fallback to make sure
-  // we don't overwrite any existing files, as well as provide a warning.
-  if (fs.statSync(filename).isDirectory()) {
+  // if it's a directory, use the default changelog filename
+  if (isDir) {
     if (!filename.endsWith('/') && !filename.endsWith('\\')) {
       filename += '/'
     }
-    filename += 'changelog-' + 
-      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ? 
+    filename += 'changelog-' +
+      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ?
         config.projectPackage.version :
         (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the changelog filename.')), Date.now().toString())
-      )
+      ) + '.' + ext
   }
 
-  if (file) {
-    fs.writeFileSync(
-      filename,
-      util.stringify(current)
-    )
-  }
+  // Write the contents to the file!
+  fs.writeFile(filename, util.stringify(current), (err) => {
+    if (!err) {
+      console.info(colors.green('Finished writing changelog. Wrote to'), colors.bgGreen.white(`${filename}`))
+    } else {
+      console.error(colors.red('ERROR: Failed to create changelog at'), colors.red.underline(`${filename}`), colors.red('. Perhaps the directory doesn\'t exist?'))
+    }
+  })
 }

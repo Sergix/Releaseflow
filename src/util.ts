@@ -79,7 +79,7 @@ function links(x: string): string {
   return data
 }
 
-function interpolater(line: string): string {
+function interpolater(line: string, ext?: string): string {
   /*
   flag_s: single '%'
   flag_m: double '%'
@@ -92,9 +92,16 @@ function interpolater(line: string): string {
   for (let i = 0; i < line.length; i++) {
     // If one of the flags is set
     if (flag_s || flag_m) {
-      // and the current character is not a '%'
-      if (line[i] !== '%') {
-        // then we're not reading an interpolater, so just go ahead and add the character
+      // and it's an 'e'
+      if (line[i] === 'e' && flag_s) {
+        // add file extension parameter
+        output += ext !== undefined ? ext : (config.data.markdown ? 'md' : 'txt')
+        // clear flags and move to next char
+        flag_s = false
+        flag_m = false
+        continue
+      } else if (line[i] !== '%' && flag_m) {
+        // go ahead and add the character to the option string
         option += line[i]
         continue
       // and the current character is a '%' ('%%') and the flag is not already set
@@ -103,6 +110,7 @@ function interpolater(line: string): string {
         flag_s = false
         flag_m = true
         continue
+      // and the current character is 'e' and the flag is not already set
       }
 
       // if the option is not null
@@ -158,7 +166,8 @@ function interpolater(line: string): string {
 /*
   {
     links: true,
-    interpolate: true
+    interpolate: true,
+    ext: 'md'
   }
 */
 export function replacer(x: string, options: {[index: string]: any}): string {
@@ -169,7 +178,7 @@ export function replacer(x: string, options: {[index: string]: any}): string {
   }
 
   if (options.interpolate) {
-    output = interpolater(output)
+    output = interpolater(output, options.ext !== undefined ? options.ext : undefined)
   }
 
   return output

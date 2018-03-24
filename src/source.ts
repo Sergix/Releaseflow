@@ -7,36 +7,22 @@ import * as colors from 'colors'
 export default function release(): void {
   // TODO
   // add verifier for config paths, ensuring they have a '/' character at the end, or '\' if Windows, etc.
-  // add custom export filename in config
-  // change to array for compression property, allowing multiple formats to be exported
   let archive: any
-  let filename = util.replacer(config.data.source.dist, {interpolate: true})
-
-  // If the path is a directory, check if it ends with a '/' and append a default string along with
-  // the version number if available; otherwise, slap a timestamp on the filename as the fallback to make sure
-  // we don't overwrite any existing files, as well as provide a warning.
-  if (fs.statSync(filename).isDirectory()) {
-    if (!filename.endsWith('/') && !filename.endsWith('\\')) {
-      filename += '/'
-    }
-    filename += 'src-' + 
-      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ? 
-        config.projectPackage.version :
-        (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the source package filename.')), Date.now().toString())
-      )
-  }
+  let filename: string
 
   config.data.source.compression.forEach((type: string) => {
 
     if (type === 'zip') {
-      // Replace the interpolater indentifier '%e' with the file extension
-      filename.replace(/%e/, 'zip')
+      filename = util.replacer(config.data.source.dist, {interpolate: true, ext: 'zip'})
+      if (!filename.endsWith('zip'))
+        filename += 'zip'
       archive = archiver('zip', {
         zlib: { level: 9 }
       })
     } else if (type === 'tar') {
-      // Replace the interpolater indentifier '%e' with the file extension
-      filename.replace(/%e/, 'tar.gz')
+      filename = util.replacer(config.data.source.dist, {interpolate: true, ext: 'tar.gz'})
+      if (!filename.endsWith('tar.gz'))
+        filename += 'tar.gz'
       archive = archiver('tar', {
         gzip: true,
         gzipOptions: { level: 9 }

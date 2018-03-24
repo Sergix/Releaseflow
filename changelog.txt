@@ -1,3 +1,8 @@
+(#14)[3/21/2018-22:44 1.2.1 Sergix]
+	Added better verifying of file paths in the 'dist' properties for docs, changelog, and source.
+	Interpolation can now be used in the 'dist' properties, along with the new '%e' interpolater (file extension).
+	Pushed updates to Git.
+
 (#13)[3/21/2018-22:44 1.2.0 Sergix]
 	Moved docs.replacer() to util.interpolate().
 	"dist" property paths can now include interpolaters, as well as a new interpolater %e for file extension.
