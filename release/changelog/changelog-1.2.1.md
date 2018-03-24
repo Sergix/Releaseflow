@@ -1,0 +1,2 @@
+- Added better verifying of file paths in the 'dist' properties for docs, changelog, and source.
+- Interpolation can now be used in the 'dist' properties, along with the new '%e' interpolater (file extension).
