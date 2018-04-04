@@ -3,7 +3,7 @@
   "markdown": true,
   "docs": {
     "title": "Releaseflow v%%version% Documentation",
-    "dist": "./docs/",
+    "dist": "docs/docs-%%version%.md",
     "template": {
       "Overview": "%%name% is a project aimed at simplifying the release process of a project with one simple interface. This document supplies the documentation for version %%version% of the project.",
       "Table of Contents": "%%toc%",
@@ -15,12 +15,12 @@
     "path": "changelog.txt",
     "header_format": "(#%n)[%n/%n/%n-%n:%n %%version% %s]",
     "replace_links": true,
-    "dist": "./release/changelog/",
+    "dist": "release/changelog/changelog-%%version%.md",
     "ignore": ["Pushed updates to Git."]
   },
   "source": {
-    "dir": ["src/*.ts", "src/template.json"],
-    "dist": "./release/src/",
+    "dir": ["src/*.ts"],
+    "dist": "release/src/src-%%version%.%e",
     "compression": ["zip", "tar"]
   },
   "exec": "npm run build"

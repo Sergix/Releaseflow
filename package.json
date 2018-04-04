@@ -1,6 +1,6 @@
 {
 	"name": "releaseflow-cli",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"description": "Quickly build all your dependencies for release.",
 	"author": "Peyton McGinnis <sergix@outlook.com>",
 	"main": "lib/app.js",
@@ -10,10 +10,10 @@
 		"url": "https://github.com/sergix/releaseflow"
 	},
 	"scripts": {
-		"start": "node lib/app.js",
+		"start": "node lib/app.js -lds",
 		"build": "tsc && npm run tslint",
 		"tslint": "tslint -c tslint.json -p tsconfig.json",
-		"test": "node lib/app.js -ldsc rfconfig-test.json"
+		"test": "node lib/app.js -ldsc test/rfconfig-test.json"
 	},
 	"dependencies": {
 		"archiver": "^2.1.1",

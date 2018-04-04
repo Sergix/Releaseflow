@@ -1,9 +1,9 @@
-import * as config from './config'
 import * as shell from 'child_process'
 import * as colors from 'colors'
+import { rfconfig } from './config'
 
 export default function release(): void {
-  shell.exec(config.data.exec, (error, stdout, stderr) => {
+  shell.exec(rfconfig.exec, (error, stdout, stderr) => {
       if (error) {
         console.error(colors.red(`ERROR: could not build application executable: ${error}`))
         return

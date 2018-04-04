@@ -1,0 +1,2 @@
+- Cleaned up some of the code.
+- Added support for muli-level sections in documentation template.

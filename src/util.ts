@@ -1,10 +1,11 @@
 import * as changelog from './changelog'
-import * as config from './config'
+import { projectPackage, rfconfig, projectType } from './config'
 import * as docs from './docs'
 import * as colors from 'colors'
 
 export const regexp_int: string = '((\\d{2,4}(\.(\\d[1-9])|([1-9]\\d))?)|[1-9])'
 export const regexp_string: string = '[a-zA-Z0-9]+'
+export const nl: string = '\r\n'
 
 export function stringify(data: Array<string>): string {
     let output: string = ''
@@ -12,7 +13,7 @@ export function stringify(data: Array<string>): string {
     for (let i = 0; i < data.length; i++) {
         output += data[i]
         if (!data[i].endsWith('\n')) {
-          output += '\r\n'
+          output += nl
         }
     }
 
@@ -25,8 +26,8 @@ function links(x: string): string {
   let num: string = ''
   let flag: boolean = false
   let repo: string =
-    config.type === 'node' ? config.projectPackage.repository.url
-      : (config.type === 'mvn' ? config.projectPackage.url.toString()
+    projectType === 'node' ? projectPackage.repository.url
+      : (projectType === 'mvn' ? projectPackage.url.toString()
       : (console.error(colors.red('ERROR: Could not replace links, no URL property found in project package file.')),
           process.exit(0)
       )
@@ -44,11 +45,11 @@ function links(x: string): string {
         num += x[i] // add it to the issue number string
         continue
       } else if (num !== '') { // if we have finished reading a number
-        if (config.data.markdown) {
+        if (rfconfig.markdown) {
           data += `[#${num}](`
         }
         data += `${repo}/issues/${num}`
-        if (config.data.markdown) {
+        if (rfconfig.markdown) {
           data += ')'
         }
         num = ''
@@ -66,11 +67,11 @@ function links(x: string): string {
   }
 
   if (num !== '') {
-    if (config.data.markdown) {
+    if (rfconfig.markdown) {
       data += `'[#${num}]('`
     }
     data += repo + '/issues/' + num
-    if (config.data.markdown) {
+    if (rfconfig.markdown) {
       data += ')'
     }
     num = ''
@@ -95,7 +96,7 @@ function interpolater(line: string, ext?: string): string {
       // and it's an 'e'
       if (line[i] === 'e' && flag_s) {
         // add file extension parameter
-        output += ext !== undefined ? ext : (config.data.markdown ? 'md' : 'txt')
+        output += ext !== undefined ? ext : (rfconfig.markdown ? 'md' : 'txt')
         // clear flags and move to next char
         flag_s = false
         flag_m = false
@@ -125,7 +126,7 @@ function interpolater(line: string, ext?: string): string {
           // loop through the changelog array
           for (let j = 0; j < changelog.current.length; j++) {
             // and append each line to the output
-            output += `${changelog.current[j]}\r\n`
+            output += `${changelog.current[j]}` + nl
           }
         // and the option is toc
         } else if (option === 'toc') {
@@ -134,9 +135,9 @@ function interpolater(line: string, ext?: string): string {
         // and it's a package variable
         } else {
           // if the package is loaded and good to go
-          if (config.projectPackage !== undefined)
+          if (projectPackage !== undefined)
             // then get the property from the package file
-            output += config.projectPackage[option]
+            output += projectPackage[option]
         }
 
         // clear option string

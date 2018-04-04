@@ -1,19 +1,19 @@
-import * as config from './config'
 import * as regexp from './regexp'
 import * as util from './util'
 import * as colors from 'colors'
 import * as fs from 'fs'
+import { rfconfig, projectPackage } from './config'
 
 export let current: Array<string> = []
 
 export function get(): Array<string> {
   const data: Array<string> = []
-  const fileContents: string = fs.readFileSync(config.data.changelog.path).toString()
+  const fileContents: string = fs.readFileSync(rfconfig.changelog.path).toString()
   let line: string = ''
 
   for (let i = 0; i < fileContents.length; i++) {
     if (fileContents[i] === '\n') {
-      config.data.changelog.ignore.forEach((x: string) => {
+      rfconfig.changelog.ignore.forEach((x: string) => {
         if (x !== line.trim()) // if we need to ignore the line
           data[data.length] = line.trim()
       })
@@ -33,7 +33,7 @@ export function get(): Array<string> {
 export function match(x: Array<string>): Array<string> {
 
   const data = []
-  const testString: string = regexp.replacer(config.data.changelog.header_format)
+  const testString: string = regexp.replacer(rfconfig.changelog.header_format)
   const regex: RegExp = new RegExp(testString)
   let flag: boolean = false
 
@@ -52,16 +52,16 @@ export function match(x: Array<string>): Array<string> {
       continue
     }
 
-    data[data.length] = (!x[i].trim().startsWith('-') ? '- ' : '') + (config.data.changelog.replace_links ? util.replacer(x[i], {'links': true}) : x[i])
+    data[data.length] = (!x[i].trim().startsWith('-') ? '- ' : '') + (rfconfig.changelog.replace_links ? util.replacer(x[i], {'links': true}) : x[i])
   }
 
   return data
 }
 
 export function release(file: boolean = true): void {
-  const ext: string = config.data.markdown ? 'md' : 'txt'
+  const ext: string = rfconfig.markdown ? 'md' : 'txt'
   let isDir: boolean = false
-  let filename: string = util.replacer(config.data.changelog.dist, {interpolate: true})
+  let filename: string = util.replacer(rfconfig.changelog.dist, {interpolate: true})
   current = match(get())
 
   // check if the file exists
@@ -84,8 +84,8 @@ export function release(file: boolean = true): void {
       filename += '/'
     }
     filename += 'changelog-' +
-      (config.projectPackage.version !== undefined && config.projectPackage.version !== null ?
-        config.projectPackage.version :
+      (projectPackage.version !== undefined && projectPackage.version !== null ?
+        projectPackage.version :
         (console.info(colors.yellow('WARNING: No version number found in package file. A timestamp will be used in the changelog filename.')), Date.now().toString())
       ) + '.' + ext
   }
