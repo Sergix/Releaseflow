@@ -19,7 +19,7 @@
     "ignore": ["Pushed updates to Git."]
   },
   "source": {
-    "dir": ["src/*.ts", "src/template.json"],
+    "dir": ["src/*.ts"],
     "dist": "./release/src/",
     "compression": ["zip", "tar"]
   },

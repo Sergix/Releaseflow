@@ -10,10 +10,10 @@
 		"url": "https://github.com/sergix/releaseflow"
 	},
 	"scripts": {
-		"start": "node lib/app.js",
+		"start": "node lib/app.js -lds",
 		"build": "tsc && npm run tslint",
 		"tslint": "tslint -c tslint.json -p tsconfig.json",
-		"test": "node lib/app.js -ldsc rfconfig-test.json"
+		"test": "node lib/app.js -ldsc test/rfconfig-test.json"
 	},
 	"dependencies": {
 		"archiver": "^2.1.1",

@@ -1,3 +1,8 @@
+(#15)[4/3/2018-22:44 1.2.2 Sergix]
+	Cleaned up some of the code.
+	Added support for muli-level sections in documentation template.
+	Pushed updates to Git.
+
 (#14)[3/21/2018-22:44 1.2.1 Sergix]
 	Added better verifying of file paths in the 'dist' properties for docs, changelog, and source.
 	Interpolation can now be used in the 'dist' properties, along with the new '%e' interpolater (file extension).

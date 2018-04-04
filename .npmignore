@@ -13,3 +13,4 @@ pom.xml
 rfconfog-test.json
 CODE_OF_CONDUCT.md
 .vscode/
+*.map

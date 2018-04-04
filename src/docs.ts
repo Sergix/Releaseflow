@@ -4,53 +4,71 @@ import * as config from './config'
 import * as fs from 'fs'
 import * as colors from 'colors'
 import * as util from './util'
+import { isObject } from 'util'
+import { rfconfig } from './config'
 
 export let toc: string = ''
 
-function generateToc(): void {
-  let i = 1
-  // loop through each tempalate section
-  for (const x in config.data.docs.template) {
-    // (i)      (x)
-    //  1. Section Title
-    toc += `${i}. ${x}\r\n`
-    i++
+let bIndex: number = 1
+let tIndex: number = 1
+const contents: Array<string> = []
+
+function title(text: string): void {
+  let output: string = ''
+
+  if (rfconfig.markdown) {
+    for (let i = 0; i < bIndex; i++) {
+      output += '#'
+    }
+  }
+
+  output += ` ${util.replacer(text, {interpolate: true})}` + util.nl
+
+  contents.push(output)
+}
+
+function build(x: any) {
+  bIndex++
+  for (const y in x) {
+    if (isObject(x[y])) {
+      title(y)
+      build(x[y])
+      bIndex--
+    } else {
+      title(y)
+      if (!rfconfig.markdown) contents.push('----------------------')
+      contents.push(util.replacer(x[y], {interpolate: true}))
+      contents.push(util.nl)
+    }
   }
 }
 
-export function build(): Array<string> {
-  const data: Array<string> = []
-
-  // go ahead and generate the table of contents in case we need it later
-  generateToc()
-
-  // add the document title
-  data.push((config.data.markdown ? '# ' : '') + util.replacer(config.data.docs.title, {interpolate: true}) + '\r\n\r\n')
-
-  // TODO
-  // add subsections by checking if the section is an object rather than a string
-  // recursiveness will really come in handy
-
-  // loop through each section
-  for (const x in config.data.docs.template) {
-    // add the section title
-    data.push((config.data.markdown ? '## ' : '') + `${x}\r\n`)
-    // if we're not writing in markdown, add a little section underline
-    if (!config.data.markdown) data.push('----------------------')
-    /// interpolate user specified package properties
-    data.push(util.replacer(config.data.docs.template[x], {interpolate: true}))
-    // add an extra newline between sections
-    data.push('\r\n')
+function buildToc(x: any): void {
+  let t: number = 1
+  for (const y in x) {
+    if (isObject(x[y])) {
+      tIndex++
+      buildToc(x[y])
+      tIndex--
+    } else {
+      for (let i = 0; i < tIndex - 1; i++) {
+        toc += '\t'
+      }
+      toc += `${t}. ${y}  ` + util.nl
+      t++
+    }
   }
-
-  return data
 }
 
 export default function release(): void {
-  const ext: string = config.data.markdown ? 'md' : 'txt'
-  const contents = build()
-  let filename = util.replacer(config.data.docs.dist, {interpolate: true})
+  const ext: string = rfconfig.markdown ? 'md' : 'txt'
+  let filename = util.replacer(rfconfig.docs.dist, {interpolate: true})
   let isDir: boolean = false
+
+  title(rfconfig.docs.title + util.nl)
+
+  buildToc(rfconfig.docs.template)
+  build(rfconfig.docs.template)
 
   // check if the file exists
   try {
