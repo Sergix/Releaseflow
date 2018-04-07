@@ -1,3 +1,7 @@
+(#18)[4/7/2018-11:38 1.2.5 Sergix]
+	Fixed 'dist' properties not creating new files when directory exists.
+	Pushed updates to Git.
+
 (#17)[4/7/2018-10:49 1.2.4 Sergix]
 	Fixed incorrect version output.
 	Pushed updates to Git.

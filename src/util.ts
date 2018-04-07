@@ -188,6 +188,9 @@ export function replacer(x: string, options: {[index: string]: any}): string {
 
 export function filenameHandler(filename: string, ext: string, prefix: string, logMsg: string): string {
   let isDir: boolean = false
+  const path: string = filename.slice(0, filename.lastIndexOf('/'))
+
+  console.info(colors.cyan(path))
 
   // check if the directory exists
   try {
@@ -195,14 +198,21 @@ export function filenameHandler(filename: string, ext: string, prefix: string, l
       isDir = true
     }
   } catch (err) {
-    // check if its a file
     try {
-      if (statSync(filename).isFile()) {
-        isDir = false
+      if (statSync(path).isDirectory()) {
+        return filename
       }
     } catch (err) {
-      console.error(colors.red(`ERROR: Could not find directory or file ${filename}.`))
-      process.exit(0)
+      // check if its a file
+      try {
+        if (statSync(filename).isFile()) {
+          isDir = false
+        }
+      } catch (err) {
+        console.error(colors.red(err))
+        console.error(colors.red(`ERROR: Could not find directory or file ${filename}.`))
+        process.exit(0)
+      }
     }
   }
 
