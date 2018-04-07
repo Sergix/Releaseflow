@@ -190,8 +190,6 @@ export function filenameHandler(filename: string, ext: string, prefix: string, l
   let isDir: boolean = false
   const path: string = filename.slice(0, filename.lastIndexOf('/'))
 
-  console.info(colors.cyan(path))
-
   // check if the directory exists
   try {
     if (statSync(filename).isDirectory()) {
