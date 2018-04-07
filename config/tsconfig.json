@@ -5,7 +5,7 @@
         "noImplicitAny": true,
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "lib",
+        "outDir": "../lib",
         "baseUrl": ".",
         "paths": {
             "*": [
@@ -15,6 +15,6 @@
         }
     },
     "include": [
-        "src/**/*"
+        "../src/**/*"
     ]
 }

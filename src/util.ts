@@ -2,6 +2,7 @@ import * as changelog from './changelog'
 import { projectPackage, rfconfig, projectType } from './config'
 import * as docs from './docs'
 import * as colors from 'colors'
+import { statSync } from 'fs'
 
 export const regexp_int: string = '((\\d{2,4}(\.(\\d[1-9])|([1-9]\\d))?)|[1-9])'
 export const regexp_string: string = '[a-zA-Z0-9]+'
@@ -183,4 +184,39 @@ export function replacer(x: string, options: {[index: string]: any}): string {
   }
 
   return output
+}
+
+export function filenameHandler(filename: string, ext: string, prefix: string, logMsg: string): string {
+  let isDir: boolean = false
+
+  // check if the directory exists
+  try {
+    if (statSync(filename).isDirectory()) {
+      isDir = true
+    }
+  } catch (err) {
+    // check if its a file
+    try {
+      if (statSync(filename).isFile()) {
+        isDir = false
+      }
+    } catch (err) {
+      console.error(colors.red(`ERROR: Could not find directory or file ${filename}.`))
+      process.exit(0)
+    }
+  }
+
+  if (isDir) {
+    if (!filename.endsWith('/') && !filename.endsWith('\\')) filename += '/'
+    filename += prefix + '-'
+    try {
+      filename += projectPackage.version
+    } catch (err) {
+      colors.yellow(`WARNING: No version number found in package file. A timestamp will be used in the ${logMsg} filename.`)
+      filename += Date.now().toString()
+    }
+    filename += '.' + ext
+  }
+
+  return filename
 }

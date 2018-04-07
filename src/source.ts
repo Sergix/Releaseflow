@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import * as archiver from 'archiver'
-import * as util from './util'
+import { filenameHandler, replacer } from './util'
 import * as colors from 'colors'
-import { rfconfig } from './config'
+import { rfconfig, projectPackage } from './config'
 
 export default function release(): void {
   // TODO
@@ -13,16 +13,16 @@ export default function release(): void {
   rfconfig.source.compression.forEach((type: string) => {
 
     if (type === 'zip') {
-      filename = util.replacer(rfconfig.source.dist, {interpolate: true, ext: 'zip'})
-      if (!filename.endsWith('zip'))
-        filename += 'zip'
+      filename = replacer(rfconfig.source.dist, {interpolate: true, ext: 'zip'})
+      filename = filenameHandler(filename, 'zip', 'src', 'source package')
+
       archive = archiver('zip', {
         zlib: { level: 9 }
       })
     } else if (type === 'tar') {
-      filename = util.replacer(rfconfig.source.dist, {interpolate: true, ext: 'tar.gz'})
-      if (!filename.endsWith('tar.gz'))
-        filename += 'tar.gz'
+      filename = replacer(rfconfig.source.dist, {interpolate: true, ext: 'tar.gz'})
+      filename = filenameHandler(filename, 'tar.gz', 'src', 'source package')
+
       archive = archiver('tar', {
         gzip: true,
         gzipOptions: { level: 9 }

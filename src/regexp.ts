@@ -1,5 +1,6 @@
 import * as program from './program'
 import * as fs from 'fs'
+import * as colors from 'colors'
 import { rfconfig, projectPackage } from './config'
 
 export const regexp_int: string = '((\\d{2,4}(\.(\\d[1-9])|([1-9]\\d))?)|[1-9])'
@@ -28,24 +29,26 @@ export function replacer(x: string): string {
       }
 
       if (option !== '') {
-        if (projectPackage[option]) {
-          for (let j = 0; j < projectPackage[option].length; j++) {
-            if (projectPackage[option][j] === '[' || projectPackage[option][j] === ']' || projectPackage[option][j] === '\\' || projectPackage[option][j] === '/' || projectPackage[option][j] === '(' || projectPackage[option][j] === ')' || projectPackage[option][j] === '^' || projectPackage[option][j] === '$' || projectPackage[option][j] === '*' || projectPackage[option][j] === '?' || projectPackage[option][j] === '>' || projectPackage[option][j] === '<' || projectPackage[option][j] === '.' || projectPackage[option][j] === '+' || projectPackage[option][j] === '|' || projectPackage[option][j] === '&' || projectPackage[option][j] === '#' || projectPackage[option][j] === '=' || projectPackage[option][j] === '!' || projectPackage[option][j] === '{' || projectPackage[option][j] === '}' || projectPackage[option][j] === ',') {
-              output += '\\'
-            }
+        try {
+          if (projectPackage[option]) {
+            for (let j = 0; j < projectPackage[option].length; j++) {
+              if (projectPackage[option][j] === '[' || projectPackage[option][j] === ']' || projectPackage[option][j] === '\\' || projectPackage[option][j] === '/' || projectPackage[option][j] === '(' || projectPackage[option][j] === ')' || projectPackage[option][j] === '^' || projectPackage[option][j] === '$' || projectPackage[option][j] === '*' || projectPackage[option][j] === '?' || projectPackage[option][j] === '>' || projectPackage[option][j] === '<' || projectPackage[option][j] === '.' || projectPackage[option][j] === '+' || projectPackage[option][j] === '|' || projectPackage[option][j] === '&' || projectPackage[option][j] === '#' || projectPackage[option][j] === '=' || projectPackage[option][j] === '!' || projectPackage[option][j] === '{' || projectPackage[option][j] === '}' || projectPackage[option][j] === ',') {
+                output += '\\'
+              }
 
-            output += projectPackage[option][j]
-          }
-        } else if (rfconfig[option]) {
-          for (let j = 0; j < rfconfig[option].length; j++) {
-            if (rfconfig[option][j] === '[' || rfconfig[option][j] === ']' || rfconfig[option][j] === '\\' || rfconfig[option][j] === '/' || rfconfig[option][j] === '(' || rfconfig[option][j] === ')' || rfconfig[option][j] === '^' || rfconfig[option][j] === '$' || rfconfig[option][j] === '*' || rfconfig[option][j] === '?' || rfconfig[option][j] === '>' || rfconfig[option][j] === '<' || rfconfig[option][j] === '.' || rfconfig[option][j] === '+' || rfconfig[option][j] === '|' || rfconfig[option][j] === '&' || rfconfig[option][j] === '#' || rfconfig[option][j] === '=' || rfconfig[option][j] === '!' || rfconfig[option][j] === '{' || rfconfig[option][j] === '}' || rfconfig[option][j] === ',') {
-              output += '\\'
+              output += projectPackage[option][j]
             }
+          } else if (rfconfig[option]) {
+            for (let j = 0; j < rfconfig[option].length; j++) {
+              if (rfconfig[option][j] === '[' || rfconfig[option][j] === ']' || rfconfig[option][j] === '\\' || rfconfig[option][j] === '/' || rfconfig[option][j] === '(' || rfconfig[option][j] === ')' || rfconfig[option][j] === '^' || rfconfig[option][j] === '$' || rfconfig[option][j] === '*' || rfconfig[option][j] === '?' || rfconfig[option][j] === '>' || rfconfig[option][j] === '<' || rfconfig[option][j] === '.' || rfconfig[option][j] === '+' || rfconfig[option][j] === '|' || rfconfig[option][j] === '&' || rfconfig[option][j] === '#' || rfconfig[option][j] === '=' || rfconfig[option][j] === '!' || rfconfig[option][j] === '{' || rfconfig[option][j] === '}' || rfconfig[option][j] === ',') {
+                output += '\\'
+              }
 
-            output += rfconfig[option][j]
+              output += rfconfig[option][j]
+            }
           }
-        } else {
-          console.warn('Unknown property "' + option + '". Skipping...')
+        } catch (err) {
+          console.warn(colors.yellow(`Property "${option}" not found. Skipping...`))
         }
 
         option = ''
