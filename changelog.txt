@@ -1,3 +1,7 @@
+(#17)[4/7/2018-10:49 1.2.4 Sergix]
+	Fixed incorrect version output.
+	Pushed updates to Git.
+
 (#16)[4/6/2018-22:50 1.2.3 Sergix]
 	Fixed 'dist' properties not recognizing directory paths.
 	Moved the project's build config files into their own 'config/' folder.
