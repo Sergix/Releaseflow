@@ -1,6 +1,6 @@
 {
 	"name": "releaseflow-cli",
-	"version": "1.2.4",
+	"version": "1.2.5",
 	"description": "Quickly build all your dependencies for release.",
 	"author": "Peyton McGinnis <sergix@outlook.com>",
 	"main": "lib/app.js",
@@ -24,10 +24,10 @@
 		"xml2js": "^0.4.19"
 	},
 	"devDependencies": {
-		"@types/archiver": "^2.1.0",
+		"@types/archiver": "^2.1.1",
 		"@types/jsonfile": "^4.0.1",
-		"@types/xml2js": "^0.4.2",
-		"@types/node": "^9.4.7"
+		"@types/node": "^9.6.2",
+		"@types/xml2js": "^0.4.2"
 	},
 	"bin": {
 		"releaseflow-cli": "lib/app.js"
