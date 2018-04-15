@@ -13,7 +13,7 @@
 		"start": "node lib/app.js -lds",
 		"build": "tsc -p config/ && npm run tslint",
 		"tslint": "tslint -c config/tslint.json -p config/tsconfig.json",
-		"test": "node lib/app.js -lc test/rfconfig-test.json",
+		"test": "node lib/app.js -ldsec test/rfconfig-test.json",
 		"debug": "node lib/app.js -lc test/rfconfig-test.json",
 		"release": "releaseflow-cli -ldsc config/rfconfig.json"
 	},

@@ -1,3 +1,8 @@
+(#22)[4/15/2018-16:42 1.2.7 Sergix]
+	Updated README.
+	Added Travis CI integration! Created .travis.yml file.
+	Pushed updates to Git.
+
 (#21)[4/15/2018-16:42 1.2.7 Sergix]
 	Fixed changelog building not recognizing multi-line header formats.
 	Pushed updates to Git.
