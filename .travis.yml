@@ -1,3 +1,5 @@
 language: node_js
 node_js:
   - "node"
+notifications:
+  slack: sergix:C00OrRt0DgrctCaZWDCCE95P
