@@ -1,4 +1,5 @@
 import * as program from 'commander'
+import * as jsonfile from 'jsonfile'
 
 export let op_changelog: boolean
 export let op_docs: boolean
@@ -8,7 +9,7 @@ export let op_configFile: string
 
 export function options(): void {
   program
-    .version('1.2.4')
+    .version(jsonfile.readFileSync('package.json').version)
     .option('-l, --changelog', 'build changelog')
     .option('-d, --docs', 'build documentation template')
     .option('-e, --exec', 'build executable')

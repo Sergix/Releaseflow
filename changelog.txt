@@ -1,3 +1,11 @@
+(#21)[4/15/2018-16:42 1.2.7 Sergix]
+	Changelog building now supports multi-line header formats.
+	Pushed updates to Git.
+
+(#20)[4/7/2018-12:09 1.2.7 Sergix]
+	Changed cli version to auto update.
+	Updated README.
+
 (#19)[4/7/2018-11:46 1.2.6 Sergix]
 	Removed extra output.
 	Pushed updates to Git.

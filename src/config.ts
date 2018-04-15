@@ -39,38 +39,46 @@ export let projectPackage: { [index: string]: any }
 export let projectType: string = ''
 
 export function load(): void {
+  let packageFile: string
+
   if (program.op_configFile !== undefined) { // config file path was specified by user
     path = program.op_configFile
   }
 
-  const file: object = json.readFileSync(path, {throws: false})
+  rfconfig = json.readFileSync(path, {throws: false})
 
-  if (file === null) { // config file does not exist
+  if (rfconfig === null) { // config file does not exist
     console.info(colors.cyan('Creating template config file in current directory...'))
 
-    json.writeFileSync(path, template, {spaces: 2, EOL: nl})
+    json.writeFileSync('rfconfig.json', template, {spaces: 2, EOL: nl})
 
-    console.info(colors.yellow.underline('rfconfig.json'), colors.yellow('file created. Please modify this file to your liking, then run the application again.\n\nReleaseflow will now close.'))
-    console.info(process.exit(0))
+    console.info(colors.yellow.underline(path), colors.yellow('file created. Please modify this file to your liking, then run the application again.\n\nReleaseflow will now close.'))
+    process.exit(0)
 
     return
   }
 
-  rfconfig = json.readFileSync(path)
+  try {
+    packageFile = fs.readFileSync(rfconfig.package).toString()
+  } catch (err) {
+    console.info(colors.cyan(err))
+    console.error(colors.red(`ERROR: Could not read project file "${rfconfig.package}".`))
+    process.exit(0)
+  }
 
-  if (rfconfig.package) {
-    if (rfconfig.package.endsWith('package.json')) { // Node.js
-      projectType = 'node'
-      projectPackage = JSON.parse(fs.readFileSync(rfconfig.package).toString())
-    } else if (rfconfig.package.endsWith('pom.xml')) { // Maven
-      xmlj.parseString(fs.readFileSync(rfconfig.package).toString(), (err, result) => {
-        if (err) {
-          console.error(colors.red('ERROR: Failed to parse pom.xml XML data'))
-          return
-        }
-        projectType = 'mvn'
-        projectPackage = result.project
-      })
-    }
+  if (rfconfig.package.endsWith('.json')) {
+    if (rfconfig.package.endsWith('package.json')) projectType = 'node' // Node.js
+
+    projectPackage = JSON.parse(packageFile)
+  } else if (rfconfig.package.endsWith('.xml')) {
+    if (rfconfig.package.endsWith('pom.xml')) projectType = 'mvn' // Maven
+
+    xmlj.parseString(packageFile, (err, result) => {
+      if (err) {
+        console.error(colors.red('ERROR: Failed to parse package XML data.'))
+        process.exit(0)
+      }
+      projectPackage = result.project
+    })
   }
 }
