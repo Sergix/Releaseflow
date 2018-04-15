@@ -26,13 +26,16 @@ function links(x: string): string {
   const regex = new RegExp(regexp_int) // integer match
   let num: string = ''
   let flag: boolean = false
-  let repo: string =
-    projectType === 'node' ? projectPackage.repository.url
-      : (projectType === 'mvn' ? projectPackage.url.toString()
-      : (console.error(colors.red('ERROR: Could not replace links, no URL property found in project package file.')),
-          process.exit(0)
-      )
-    )
+  let repo: string = ''
+
+  if (projectType === 'node') {
+    repo = projectPackage.repository.url
+  } else if (projectType === 'mvn') {
+    projectPackage.url.toString()
+  } else {
+    console.error(colors.red('ERROR: Could not replace links, no URL property found in project package file.'))
+    return x
+  }
 
   if (repo.endsWith('.git')) {
     repo = repo.substr(0, repo.length - 4)
@@ -188,6 +191,7 @@ export function replacer(x: string, options: {[index: string]: any}): string {
 
 export function filenameHandler(filename: string, ext: string, prefix: string, logMsg: string): string {
   let isDir: boolean = false
+  const path: string = filename.slice(0, filename.lastIndexOf('/'))
 
   // check if the directory exists
   try {
@@ -195,14 +199,21 @@ export function filenameHandler(filename: string, ext: string, prefix: string, l
       isDir = true
     }
   } catch (err) {
-    // check if its a file
     try {
-      if (statSync(filename).isFile()) {
-        isDir = false
+      if (statSync(path).isDirectory()) {
+        return filename
       }
     } catch (err) {
-      console.error(colors.red(`ERROR: Could not find directory or file ${filename}.`))
-      process.exit(0)
+      // check if its a file
+      try {
+        if (statSync(filename).isFile()) {
+          isDir = false
+        }
+      } catch (err) {
+        console.error(colors.red(err))
+        console.error(colors.red(`ERROR: Could not find directory or file ${filename}.`))
+        process.exit(0)
+      }
     }
   }
 

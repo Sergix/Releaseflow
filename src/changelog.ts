@@ -31,28 +31,60 @@ export function get(): Array<string> {
 }
 
 export function match(x: Array<string>): Array<string> {
-
-  const data = []
+  const data: Array<string> = []
   const testString: string = regexp.replacer(rfconfig.changelog.header_format)
   const regex: RegExp = new RegExp(testString)
-  let flag: boolean = false
+  let flag_r: boolean = false, flag_m: boolean = false
+  let split: Array<string> = []
+  let line: string = ''
+  let j: number
+
+  split = testString.split('\n')
+
+  if (split !== []) { // if the format string is a multi-line header
+    flag_m = true
+  }
 
   for (let i = 0; i < x.length; i++) {
-    if (!flag) { // if we are not currently reading an entry
-
-      if (regex.test(x[i])) { // if the string matches the header format
-        flag = true
-
+    if (!flag_r) { // if we are not currently reading an entry
+      if (flag_m) { // if it's a multi-line header format
+        flag_r = true // set flag preliminarily to true
+        for (j = 0; j < split.length; j++) { // loop through split array
+          if (new RegExp(split[j].trim()).test(x[i + j])) { // if the regex matches the current header line we are trying to match
+            continue // then continue to the next line of the header
+          } else { // if it's not a match
+            j = 0 
+            flag_r = false
+            break // quit the loop, attempt to find a new header match
+          }
+        }
+      } else { // if it's a single-line header
+        if (regex.test(x[i])) { // if the string matches the header format
+          flag_r = true // then we are going to read an entry on the next iteration
+        }
       }
-      continue
+
+      // here, we matched a multi-header
+      i += j - 1 // so add the length of the header to the index of the line we want to read next
+      continue // and move to the next iteration
     }
 
     if (x[i] === '\n' || x[i] === '') { // if the data is a newline, it is the end of entry
-      flag = false
+      flag_r = false
       continue
     }
 
-    data[data.length] = (!x[i].trim().startsWith('-') ? '- ' : '') + (rfconfig.changelog.replace_links ? replacer(x[i], {'links': true}) : x[i])
+    line = x[i].trim()
+
+    if (!line.startsWith('-')) {
+      line = '- ' + line
+    }
+
+    if (rfconfig.changelog.replace_links) {
+      line = replacer(line, {'links': true})
+    }
+    
+    data.push(line)
   }
 
   return data
