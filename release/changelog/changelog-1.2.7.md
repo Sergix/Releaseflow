@@ -1,0 +1,3 @@
+- Fixed changelog building not recognizing multi-line header formats.
+- Changed cli version to auto update.
+- Updated README.
