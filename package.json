@@ -19,7 +19,7 @@
 	},
 	"dependencies": {
 		"archiver": "^2.1.1",
-		"colors": "^1.2.1",
+		"colors": "^1.2.5",
 		"commander": "^2.15.1",
 		"jsonfile": "^4.0.0",
 		"xml2js": "^0.4.19"
@@ -27,8 +27,10 @@
 	"devDependencies": {
 		"@types/archiver": "^2.1.1",
 		"@types/jsonfile": "^4.0.1",
-		"@types/node": "^9.6.2",
-		"@types/xml2js": "^0.4.2"
+		"@types/node": "^9.6.15",
+		"@types/xml2js": "^0.4.2",
+		"tslint-config-prettier": "^1.18.0",
+		"tslint-plugin-prettier": "^2.1.0"
 	},
 	"bin": {
 		"releaseflow-cli": "lib/app.js"

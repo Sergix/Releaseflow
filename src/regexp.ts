@@ -1,75 +1,42 @@
-import * as program from './program'
-import * as fs from 'fs'
-import * as colors from 'colors'
-import { rfconfig, projectPackage } from './config'
+import * as colors from "colors";
+import { rfconfig, projectPackage } from "./config";
+import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from "constants";
 
-export const regexp_int: string = '((\\d{2,4}(\.(\\d[1-9])|([1-9]\\d))?)|[1-9])'
-export const regexp_string: string = '[a-zA-Z0-9]+'
+export const regexp_int: string = "((\\d{2,4}(.(\\d[1-9])|([1-9]\\d))?)|[1-9])";
+export const regexp_string: string = "[a-zA-Z0-9]+";
+export const regexp_version: string =
+  "([a-zA-Z0-9]+\\.[a-zA-Z0-9]+\\.[a-zA-Z0-9]+)";
 
-export function replacer(x: string): string {
-  let flag_s: boolean = false, flag_m: boolean = false
-  let output: string = ''
-  let option: string = ''
+const regexp_identifier: RegExp = /%%[a-zA-Z0-9]+%/;
 
-  for (let i = 0; i < x.length; i++) {
-    if (flag_s || flag_m) {
-      if (x[i] !== '%' && flag_m) {
-        option += x[i]
-        continue
-      } else if (x[i] === 'n') {
-        output += regexp_int // integer regex
-      } else if (x[i] === 's') {
-        output += regexp_string // string regex
-      } else if (x[i] === 'v') {
-        output += '([a-zA-Z0-9]+\\.[a-zA-Z0-9]+\\.[a-zA-Z0-9]+)' // version regex
-      } else if (x[i] === '%' && !flag_m) {
-        flag_s = false
-        flag_m = true
-        continue
-      }
+export function replacer(input: string): string {
+  let output: string = "";
+  let option: string = "";
 
-      if (option !== '') {
-        try {
-          if (projectPackage[option]) {
-            for (let j = 0; j < projectPackage[option].length; j++) {
-              if (projectPackage[option][j] === '[' || projectPackage[option][j] === ']' || projectPackage[option][j] === '\\' || projectPackage[option][j] === '/' || projectPackage[option][j] === '(' || projectPackage[option][j] === ')' || projectPackage[option][j] === '^' || projectPackage[option][j] === '$' || projectPackage[option][j] === '*' || projectPackage[option][j] === '?' || projectPackage[option][j] === '>' || projectPackage[option][j] === '<' || projectPackage[option][j] === '.' || projectPackage[option][j] === '+' || projectPackage[option][j] === '|' || projectPackage[option][j] === '&' || projectPackage[option][j] === '#' || projectPackage[option][j] === '=' || projectPackage[option][j] === '!' || projectPackage[option][j] === '{' || projectPackage[option][j] === '}' || projectPackage[option][j] === ',') {
-                output += '\\'
-              }
+  let splitInput: string[] = input
+    .replace("%n", regexp_int)
+    .replace("%s", regexp_string)
+    .replace("%v", regexp_version)
+    .split(regexp_identifier);
 
-              output += projectPackage[option][j]
-            }
-          } else if (rfconfig[option]) {
-            for (let j = 0; j < rfconfig[option].length; j++) {
-              if (rfconfig[option][j] === '[' || rfconfig[option][j] === ']' || rfconfig[option][j] === '\\' || rfconfig[option][j] === '/' || rfconfig[option][j] === '(' || rfconfig[option][j] === ')' || rfconfig[option][j] === '^' || rfconfig[option][j] === '$' || rfconfig[option][j] === '*' || rfconfig[option][j] === '?' || rfconfig[option][j] === '>' || rfconfig[option][j] === '<' || rfconfig[option][j] === '.' || rfconfig[option][j] === '+' || rfconfig[option][j] === '|' || rfconfig[option][j] === '&' || rfconfig[option][j] === '#' || rfconfig[option][j] === '=' || rfconfig[option][j] === '!' || rfconfig[option][j] === '{' || rfconfig[option][j] === '}' || rfconfig[option][j] === ',') {
-                output += '\\'
-              }
+  splitInput.map((item: string) => {
+    // escape any nonalphanumeric characters
+    item = item.replace("%", "").replace(/[^a-zA-Z0-9]/, (char: string) => {
+      return "\\" + char;
+    });
 
-              output += rfconfig[option][j]
-            }
-          }
-        } catch (err) {
-          console.warn(colors.yellow(`Property "${option}" not found. Skipping...`))
-        }
-
-        option = ''
-      }
-
-      flag_s = false
-      flag_m = false
-      continue
+    if (projectPackage[item]) {
+      return projectPackage.item;
+    } else if (rfconfig[item]) {
+      return rfconfig.item;
+    } else {
+      console.warn(
+        colors.yellow(`Property "${option}" not found. Skipping...`)
+      );
+      return item;
     }
+  });
 
-    if (x[i] === '%') {
-      flag_s = true
-      continue
-    }
-
-    if (x[i] === '[' || x[i] === ']' || x[i] === '\\' || x[i] === '/' || x[i] === '(' || x[i] === ')' || x[i] === '^' || x[i] === '$' || x[i] === '*' || x[i] === '?' || x[i] === '>' || x[i] === '<' || x[i] === '.' || x[i] === '+' || x[i] === '|' || x[i] === '&' || x[i] === '#' || x[i] === '=' || x[i] === '!' || x[i] === '{' || x[i] === '}' || x[i] === ',') {
-      output += '\\'
-    }
-
-    output += x[i]
-  }
-
-  return output
+  console.log(output);
+  return output;
 }
